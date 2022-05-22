@@ -5,8 +5,9 @@ import re
 TYPES = {
     'mul': '$^',
     'ld/st': '(push|pop|ldr.*)',
-    'branch': '(b.*)',
-    'other': '(and.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|uxtb|it|cmp|)',
+    'branch': '(bne.*|bcc.*|bhi.*)',
+    'other': '(and.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|uxtb|it|cmp'
+        '|bic.*|b\.n)',
 }
 
 def main(paths):
