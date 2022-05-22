@@ -1,0 +1,5 @@
+*.o
+*.d
+*.trace
+.gdb_history
+main
