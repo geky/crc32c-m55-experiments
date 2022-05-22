@@ -1,4 +1,3 @@
-
 // A crc32c implementation using a small 256 byte table
 
 #include <stdint.h>

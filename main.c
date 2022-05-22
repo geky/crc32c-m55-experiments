@@ -10,6 +10,12 @@ extern uint32_t crc32c_naive(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_naive_words(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_table(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_small_table(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_naive(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_naive_words(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_sparse(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_sparse_words(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_vmullp(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_vmullp_words(uint32_t crc, const void *data, size_t size);
 
 static inline uint32_t __rbit32(uint32_t a) {
     uint32_t x;
@@ -62,14 +68,32 @@ int main(void) {
     // run crcs
     uint32_t crc;
     crc = crc32c_naive(0, data, DATA_SIZE);
-    printf("%-24s => 0x%08"PRIx32"\n", "crc32c_naive", crc);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_naive", crc);
 
     crc = crc32c_naive_words(0, data, DATA_SIZE);
-    printf("%-24s => 0x%08"PRIx32"\n", "crc32c_naive_words", crc);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_naive_words", crc);
 
     crc = crc32c_table(0, data, DATA_SIZE);
-    printf("%-24s => 0x%08"PRIx32"\n", "crc32c_table", crc);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_table", crc);
 
     crc = crc32c_small_table(0, data, DATA_SIZE);
-    printf("%-24s => 0x%08"PRIx32"\n", "crc32c_small_table", crc);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_small_table", crc);
+
+    crc = crc32c_barret_naive(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_naive", crc);
+
+    crc = crc32c_barret_naive_words(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_naive_words", crc);
+
+    crc = crc32c_barret_sparse(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_sparse", crc);
+
+    crc = crc32c_barret_sparse_words(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_sparse_words", crc);
+
+    crc = crc32c_barret_vmullp(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_vmullp", crc);
+
+    crc = crc32c_barret_vmullp_words(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_vmullp_words", crc);
 }

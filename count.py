@@ -3,15 +3,15 @@
 import re
 
 TYPES = {
-    'mul': '$^',
-    'ld/st': '(push|pop|ldr.*)',
-    'branch': '(bne.*|bcc.*|bhi.*)',
-    'other': '(and.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|uxtb|it|cmp'
-        '|bic.*|b\.n)',
+    'mul': '(mul.*|vmull.*)',
+    'ld/st': '(push|pop|ldr.*|ldmia.*|stmdb.*)',
+    'branch': '(bne.*|bcc.*|bhi.*|le)',
+    'other': '(and.*|orr.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|lsr.*'
+        '|uxtb|it|cmp|bic.*|rbit|b\.n|bl|bx|vmov.*|vdup.*|dls)',
 }
 
 def main(paths):
-    print('%-24s %7s %s' % (
+    print('%-36s %7s %s' % (
             '',
             'count',
             ' '.join('%7s' % t for t in TYPES.keys())))
@@ -33,7 +33,7 @@ def main(paths):
                     else:
                         print('warning: unknown ins "%s"' % ins)
 
-        print('%-24s %7d %s' % (
+        print('%-36s %7d %s' % (
                 re.sub('\.trace$', '', path),
                 count,
                 ' '.join('%7s' % v for v in types.values())))

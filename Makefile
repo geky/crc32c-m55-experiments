@@ -36,8 +36,8 @@ run: build
 	$(QEMU) ./main
 
 .PHONY: disas
-disas: $(TARGET)
-	$(OBJDUMP) -d $<
+disas: $(OBJ)
+	$(OBJDUMP) -d $^
 
 .PHONY: size
 size: $(OBJ)
@@ -50,7 +50,7 @@ debug: $(TARGET)
 
 %.trace: $(TARGET) %.c
 	$(QEMU) -g 8123 ./main &
-	$(GDB) -ex "target remote :8123" $< -x trace.gdb -ex "trace $* $@"
+	$(GDB) -q -ex "target remote :8123" $< -x trace.gdb -ex "trace $* $@"
 
 trace-%: %.trace
 	grep '^=>' $<
