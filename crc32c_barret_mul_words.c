@@ -1,5 +1,5 @@
 // A crc32c implementation using Barret reduction with a naive pmul,
-// a word at a time
+// using multiplies instead of branches, a word at a time
 
 #include <stdint.h>
 #include <stddef.h>
@@ -18,12 +18,12 @@ static inline uint32_t rbit32(uint32_t a) {
 static inline uint32_t pmul32(uint32_t a, uint32_t b) {
     uint32_t x = 0;
     for (size_t i = 0; i < 32; i++) {
-        x ^= (a & (1 << i)) ? (b << i) : 0;
+        x ^= (a & (1 << i)) * b;
     }
     return x;
 }
 
-uint32_t crc32c_barret_naive_words(uint32_t crc, const void *data, size_t size) {
+uint32_t crc32c_barret_mul_words(uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;
 
