@@ -28,7 +28,7 @@ These implementations probably aren't super-optimal, but certainly usable.
 
 ## Results
 
-|                                      |      code   |     count   |      mul   |     ld/st   |    branch   |     other   |
+|                                      |      code   |       ins   |      mul   |     ld/st   |    branch   |     other   |
 |:-------------------------------------|------------:|------------:|-----------:|------------:|------------:|------------:|
 | crc32c_naive                         |      **48** |     27656   |      **0** |       516   |      4609   |     22531   |
 | crc32c_naive_words                   |        88   |     26376   |      **0** |     **132** |      4481   |     21763   |
@@ -64,7 +64,7 @@ error correction and cryptography.
 
 Here are the top contenders:
 
-|                                      |      code   |     count   |      mul   |     ld/st   |    branch   |     other   |
+|                                      |      code   |       ins   |      mul   |     ld/st   |    branch   |     other   |
 |:-------------------------------------|------------:|------------:|-----------:|------------:|------------:|------------:|
 | crc32c_naive                         |      **48** |     27656   |      **0** |       516   |      4609   |     22531   |
 | crc32c_small_table                   |       316   |      6152   |      **0** |      1540   |       513   |      4099   |

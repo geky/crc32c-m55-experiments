@@ -7,13 +7,13 @@ TYPES = {
     'ld/st': '(push|pop|ldr.*|ldmia.*|stmdb.*)',
     'branch': '(bne.*|bcc.*|bhi.*|le)',
     'other': '(and.*|orr.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|lsr.*'
-        '|uxtb|it|cmp|bic.*|rbit|b\.n|bl|bx|vmov.*|vdup.*|dls)',
+        '|uxtb|uxth|it|cmp|bic.*|rbit|b\.n|bl|bx|vmov.*|vdup.*|dls|vshl.*)',
 }
 
 def main(paths):
     print('%-36s %7s %s' % (
             '',
-            'count',
+            'ins',
             ' '.join('%7s' % t for t in TYPES.keys())))
 
     for path in paths:
