@@ -24,6 +24,10 @@ I realize this is NOT cycle-accurate and not the best indicator of performance,
 but it's was certainly the easiest measurement to perform, and possible with
 open-source tooling. I may or may not (probably not) investigate further.
 
+``` bash
+$ make count
+```
+
 These implementations probably aren't super-optimal, but certainly usable.
 
 ## Results
