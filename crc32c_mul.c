@@ -4,7 +4,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
-uint32_t crc32c_mul(uint32_t crc, const void *data, size_t size) {
+uint32_t crc32c_mul(
+        uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;
 

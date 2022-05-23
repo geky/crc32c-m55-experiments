@@ -22,7 +22,8 @@ static inline uint32_t pmul32(uint32_t a, uint32_t b) {
     return x;
 }
 
-uint32_t crc32c_barret_naive(uint32_t crc, const void *data, size_t size) {
+uint32_t crc32c_barret_naive(
+        uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;
 

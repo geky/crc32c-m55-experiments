@@ -10,7 +10,8 @@ static const uint32_t TABLE[64] = {
     0xc38d26c4, 0xd3d3e1ab, 0xe330a81a, 0xf36e6f75,
 };
 
-uint32_t crc32c_small_table(uint32_t crc, const void *data, size_t size) {
+uint32_t crc32c_small_table(
+        uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc ^= 0xffffffff;
 

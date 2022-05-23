@@ -18,8 +18,12 @@ extern uint32_t crc32c_barret_mul(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_barret_mul_words(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_barret_sparse(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_barret_sparse_words(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_sparse_unrolled(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_sparse_unrolled_words(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_barret_vmullp(uint32_t crc, const void *data, size_t size);
 extern uint32_t crc32c_barret_vmullp_words(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_vmullp_flattened(uint32_t crc, const void *data, size_t size);
+extern uint32_t crc32c_barret_vmullp_flattened_words(uint32_t crc, const void *data, size_t size);
 
 static inline uint32_t __rbit32(uint32_t a) {
     uint32_t x;
@@ -107,9 +111,21 @@ int main(void) {
     crc = crc32c_barret_sparse_words(0, data, DATA_SIZE);
     printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_sparse_words", crc);
 
+    crc = crc32c_barret_sparse_unrolled(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_sparse_unrolled", crc);
+
+    crc = crc32c_barret_sparse_unrolled_words(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_sparse_unrolled_words", crc);
+
     crc = crc32c_barret_vmullp(0, data, DATA_SIZE);
     printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_vmullp", crc);
 
     crc = crc32c_barret_vmullp_words(0, data, DATA_SIZE);
     printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_vmullp_words", crc);
+
+    crc = crc32c_barret_vmullp_flattened(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_vmullp_flattened", crc);
+
+    crc = crc32c_barret_vmullp_flattened_words(0, data, DATA_SIZE);
+    printf("%-36s => 0x%08"PRIx32"\n", "crc32c_barret_vmullp_flattened_words", crc);
 }
