@@ -15,8 +15,8 @@ SIZE = arm-none-eabi-size
 GDB = arm-none-eabi-gdb
 
 SRC ?= $(sort $(wildcard *.c))
-OBJ := $(SRC:%.c=$(BUILDDIR)%.o)
-DEP := $(SRC:%.c=$(BUILDDIR)%.d)
+OBJ := $(SRC:%.c=$(BUILDDIR)%.o) impls.py.o
+DEP := $(SRC:%.c=$(BUILDDIR)%.d) impls.py.d
 
 CRCS ?= $(sort $(wildcard crc32c_*.c))
 TRACES ?= $(CRCS:%.c=%.trace)
@@ -73,6 +73,9 @@ count: $(TRACES)
 main: $(OBJ)
 	$(CC) $(CFLAGS) $^ $(LFLAGS) -o $@
 
+impls.py.c: impls.py $(CRCS)
+	./impls.py $(CRCS:.c=) > impls.py.c
+
 %.o: %.c
 	$(CC) -c -MMD $(CFLAGS) $< -o $@
 
@@ -85,6 +88,7 @@ main: $(OBJ)
 .PHONY: clean
 clean:
 	rm -f $(TARGET)
+	rm -f impls.py.c
 	rm -f $(OBJ)
 	rm -f $(DEP)
 	rm -f $(TRACES)
