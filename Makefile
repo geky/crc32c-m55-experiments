@@ -48,9 +48,12 @@ debug: $(TARGET)
 	$(QEMU) -g 8123 ./main &
 	$(GDB) -ex "target remote :8123" $<
 
+%.trace: PORT=$(shell \
+	python -c "import sys; print(8123 + sys.argv.index('$(word 2,$^)'))" \
+	$(CRCS))
 %.trace: $(TARGET) %.c
-	$(QEMU) -g 8123 ./main &
-	$(GDB) -q -ex "target remote :8123" $< -x trace.gdb -ex "trace $* $@"
+	$(QEMU) -g $(PORT) ./main &
+	$(GDB) -q -ex "target remote :$(PORT)" $< -x trace.gdb -ex "trace $* $@"
 
 trace-%: %.trace
 	grep '^=>' $<
