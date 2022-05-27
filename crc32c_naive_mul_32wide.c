@@ -11,7 +11,7 @@ uint32_t crc32c_naive_mul_32wide(
 
     for (size_t i = 0; i < size;) {
         if (((uintptr_t)&data_[i]) % 4 == 0 && i+4 <= size) {
-            crc = crc ^ ((const uint32_t*)data_)[i/4];
+            crc = crc ^ *(const uint32_t*)&data_[i];
             for (size_t j = 0; j < 32; j++) {
                 crc = (crc >> 1) ^ ((crc & 1) * 0x82f63b78);
             }

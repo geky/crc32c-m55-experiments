@@ -30,16 +30,16 @@ uint32_t crc32c_barret_naive_mul_32wide(
 
     for (size_t i = 0; i < size;) {
         if (((uintptr_t)&data_[i]) % 4 == 0 && i+4 <= size) {
-            crc = crc ^ ((const uint32_t*)data_)[i/4];
+            crc = crc ^ *(const uint32_t*)&data_[i];
             crc = rbit32(pmul32(
-                rbit32(pmul32(crc, 0xdea713f1)),
-                0x1edc6f41));
+                    rbit32(pmul32(crc, 0xdea713f1)),
+                    0x1edc6f41));
             i += 4;
         } else {
             crc = crc ^ data_[i];
             crc = (crc >> 8) ^ rbit32(pmul32(
-                rbit32(pmul32(crc << 24, 0xdea713f1)),
-                0x1edc6f41));
+                    rbit32(pmul32(crc << 24, 0xdea713f1)),
+                    0x1edc6f41));
             i += 1;
         }
     }

@@ -37,7 +37,7 @@ run: build
 
 .PHONY: disas
 disas: $(OBJ)
-	$(OBJDUMP) -d $^
+	$(OBJDUMP) -d --visualize-jumps $^
 
 .PHONY: size
 size: $(OBJ)

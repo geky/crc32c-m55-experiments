@@ -39,8 +39,8 @@ uint32_t crc32c_barret_sparse_semirolled(
     for (size_t i = 0; i < size; i++) {
         crc = crc ^ data_[i];
         crc = (crc >> 8) ^ rbit32(pmul32(
-            rbit32(pmul32(crc << 24, 0xdea713f1)),
-            0x1edc6f41));
+                rbit32(pmul32(crc << 24, 0xdea713f1)),
+                0x1edc6f41));
     }
 
     return crc ^ 0xffffffff;

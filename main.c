@@ -36,6 +36,7 @@ int main(void) {
     // run crcs
     for (size_t i = 0; impls[i].name; i++) {
         uint32_t crc = impls[i].crc32c(0, data, DATA_SIZE);
-        printf("%-42s => 0x%08"PRIx32"\n", impls[i].name, crc);
+        printf("%-42s => 0x%08"PRIx32"%s\n", impls[i].name, crc,
+                (crc == 0x9f2076a7) ? "" : " !");
     }
 }

@@ -31,29 +31,31 @@ uint32_t crc32c_barret_sparse_64wide(
         uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;
-    uint64_t folded = 0;
+    uint64_t folded = crc;
 
     for (size_t i = 0; i < size;) {
         if (((uintptr_t)&data_[i]) % 8 == 0 && i+8+8 <= size) {
-            uint64_t d = ((const uint64_t*)data_)[i/8] ^ folded;
-            folded = pmul32((uint32_t)d ^ crc, 0x493c7d27)
+            uint64_t d = folded ^ *(const uint64_t*)&data_[i];
+            folded = pmul32((uint32_t)d, 0x493c7d27)
                    ^ pmul32((uint32_t)(d >> 32), 0xdd45aab8);
-            crc = 0;
             i += 8;
         } else if (((uintptr_t)&data_[i]) % 4 == 0 && i+4 <= size) {
-            crc = crc ^ ((const uint32_t*)data_)[i/4] ^ (uint32_t)folded;
-            uint64_t b = pmul32(crc, 0xdea713f1);
-            crc = (pmul32(b, 0x05ec76f1) >> 32) ^ b;
-            folded = folded >> 32;
+            crc = (uint32_t)folded ^ *(const uint32_t*)&data_[i];
+            uint32_t b = (uint32_t)pmul32(crc, 0xdea713f1);
+            folded = (folded >> 32)
+                    ^ (uint32_t)(pmul32(b, 0x05ec76f1) >> 32)
+                    ^ b;
             i += 4;
         } else {
-            crc = crc ^ data_[i];
-            uint64_t b = pmul32(crc, 0xdea713f1);
-            crc = (crc >> 8) ^ (pmul32(b, 0x05ec76f1) >> 32) ^ b;
+            crc = (uint32_t)folded ^ data_[i];
+            uint32_t b = (uint32_t)pmul32(crc << 24, 0xdea713f1);
+            folded = (folded >> 8)
+                    ^ (uint32_t)(pmul32(b, 0x05ec76f1) >> 32)
+                    ^ b;
             i += 1;
         }
     }
 
-    return crc ^ 0xffffffff;
+    return (uint32_t)folded ^ 0xffffffff;
 }
 
