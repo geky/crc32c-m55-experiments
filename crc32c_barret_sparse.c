@@ -18,9 +18,10 @@ static inline uint32_t rbit32(uint32_t a) {
 static inline uint32_t pmul32(uint32_t a, uint32_t b) {
     uint32_t x = 0;
     for (size_t i = 0; i < 4; i++) {
+        uint32_t a_ = a & (0x11111111 << i);
         for (size_t j = 0; j < 4; j++) {
-            x ^= (0x11111111 << j) & (
-                (a & (0x11111111 << i)) * (b & (0x11111111 << (0x3 & (j-i)))));
+            uint32_t b_ = b & (0x11111111 << (0x3 & (j-i)));
+            x ^= (0x11111111 << j) & (a_ * b_);
         }
     }
     return x;

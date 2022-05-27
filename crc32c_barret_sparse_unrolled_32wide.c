@@ -25,12 +25,12 @@ static inline uint32_t pmul32(uint32_t a, uint32_t b) {
     uint32_t b2 = b & 0x44444444;
     uint32_t b3 = b & 0x88888888;
     return (0x11111111 & ((a0*b0) ^ (a1*b3) ^ (a2*b2) ^ (a3*b1)))
-         | (0x22222222 & ((a0*b1) ^ (a1*b0) ^ (a2*b3) ^ (a3*b2)))
-         | (0x44444444 & ((a0*b2) ^ (a1*b1) ^ (a2*b0) ^ (a3*b3)))
-         | (0x88888888 & ((a0*b3) ^ (a1*b2) ^ (a2*b1) ^ (a3*b0)));
+         ^ (0x22222222 & ((a0*b1) ^ (a1*b0) ^ (a2*b3) ^ (a3*b2)))
+         ^ (0x44444444 & ((a0*b2) ^ (a1*b1) ^ (a2*b0) ^ (a3*b3)))
+         ^ (0x88888888 & ((a0*b3) ^ (a1*b2) ^ (a2*b1) ^ (a3*b0)));
 }
 
-uint32_t crc32c_barret_sparse_unrolled_words(
+uint32_t crc32c_barret_sparse_unrolled_32wide(
         uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;

@@ -76,8 +76,8 @@ count: $(TRACES)
 main: $(OBJ)
 	$(CC) $(CFLAGS) $^ $(LFLAGS) -o $@
 
-impls.py.c: impls.py $(CRCS)
-	./impls.py $(CRCS:.c=) > impls.py.c
+impls.py.c: $(CRCS)
+	./impls.py $(^:.c=) > impls.py.c
 
 %.o: %.c
 	$(CC) -c -MMD $(CFLAGS) $< -o $@

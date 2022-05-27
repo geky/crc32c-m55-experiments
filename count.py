@@ -3,15 +3,17 @@
 import re
 
 TYPES = {
-    'mul': '(mul.*|vmull.*)',
-    'ld/st': '(push|pop|ldr.*|ldmia.*|stmdb.*)',
-    'branch': '(bne.*|bcc.*|bhi.*|le)',
+    'vmul': '(vmull.*)',
+    'vector': '(vmov.*|vdup.*|vshl.*)',
+    'mul': '(mul.*|umull)',
+    'ld/st': '(push|pop|ldr.*|str.*|ldmia.*|stmdb.*)',
+    'branch': '(bne.*|bcc.*|bhi.*|beq.*|le)',
     'other': '(and.*|orr.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|lsr.*'
-        '|uxtb|uxth|it|cmp|bic.*|rbit|b\.n|bl|bx|vmov.*|vdup.*|dls|vshl.*)',
+        '|uxtb|uxth|it|cmp|bic.*|rbit|b\.n|bl|bx|dls|tst)',
 }
 
 def main(paths):
-    print('%-36s %7s %s' % (
+    print('%-42s %7s %s' % (
             '',
             'ins',
             ' '.join('%7s' % t for t in TYPES.keys())))
@@ -33,7 +35,7 @@ def main(paths):
                     else:
                         print('warning: unknown ins "%s"' % ins)
 
-        print('%-36s %7d %s' % (
+        print('%-42s %7d %s' % (
                 re.sub('\.trace$', '', path),
                 count,
                 ' '.join('%7s' % v for v in types.values())))

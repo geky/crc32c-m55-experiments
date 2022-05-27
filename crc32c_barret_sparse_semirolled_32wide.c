@@ -1,5 +1,5 @@
 // A crc32c implementation using Barret reduction with pmul emulated
-// using sparse multiplications, a word at a time
+// using sparse multiplications, loop unrolled
 
 #include <stdint.h>
 #include <stddef.h>
@@ -16,17 +16,22 @@ static inline uint32_t rbit32(uint32_t a) {
 }
 
 static inline uint32_t pmul32(uint32_t a, uint32_t b) {
+    uint32_t a0 = a & 0x11111111;
+    uint32_t a1 = a & 0x22222222;
+    uint32_t a2 = a & 0x44444444;
+    uint32_t a3 = a & 0x88888888;
     uint32_t x = 0;
     for (size_t i = 0; i < 4; i++) {
-        for (size_t j = 0; j < 4; j++) {
-            x ^= (0x11111111 << j) & (
-                (a & (0x11111111 << i)) * (b & (0x11111111 << (0x3 & (j-i)))));
-        }
+        x ^= (0x11111111 << i) & (
+              a0 * (b & (0x11111111 << (0x3 & (0+i))))
+            ^ a1 * (b & (0x11111111 << (0x3 & (3+i))))
+            ^ a2 * (b & (0x11111111 << (0x3 & (2+i))))
+            ^ a3 * (b & (0x11111111 << (0x3 & (1+i)))));
     }
     return x;
 }
 
-uint32_t crc32c_barret_sparse_words(
+uint32_t crc32c_barret_sparse_semirolled_32wide(
         uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;
