@@ -6,10 +6,11 @@ TYPES = {
     'vmul': '(vmull.*)',
     'vector': '(vmov.*|vdup.*|vshl.*|veor)',
     'mul': '(mul.*|umull)',
-    'ld/st': '(push|pop|ldr.*|str.*|ldmia.*|stmdb.*|vpush|vpop|vldrw.*)',
+    'ld/st': '(push|pop|ldr.*|str.*|ldmia.*|stmdb.*|vpush|vpop|vldrw.*'
+        '|vrev.*)',
     'branch': '(bne.*|bcc.*|bhi.*|beq.*|le)',
     'other': '(and.*|orr.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|lsr.*'
-        '|uxtb|uxth|it|cmp|bic.*|rbit|b\.n|bl|bx|dls|tst)',
+        '|uxtb|uxth|it|cmp|bic.*|rbit|b\.n|bl|bx|dls|tst|vmsr|vpst)',
 }
 
 def main(paths):

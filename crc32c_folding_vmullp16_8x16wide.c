@@ -1,5 +1,5 @@
-// A crc32c implementation using Barret reduction leveraging ARMv8-M's MVE
-// vmull.p16 instruction, a word at a time
+// A crc32c implementation using polynomial folding leveraging ARMv8-M's MVE
+// vmull.p16 instruction, 8 16-bit halfwords at a time
 
 #include <stdint.h>
 #include <stddef.h>
@@ -32,7 +32,7 @@ static inline uint32_t pmul32(uint32_t a, uint32_t b) {
             ^ (__arm_vgetq_lane_u32(x_v, 2) << 16);
 }
 
-uint32_t crc32c_barret_vmullp16_128wide(
+uint32_t crc32c_folding_vmullp16_8x16wide(
         uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;

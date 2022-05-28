@@ -1,5 +1,5 @@
-// A crc32c implementation using Barret reduction with pmul emulated
-// using sparse multiplications, a word at a time
+// A crc32c implementation using polynomial folding with a naive pmul,
+// 2 words at a time
 
 #include <stdint.h>
 #include <stddef.h>
@@ -17,17 +17,13 @@ static inline uint32_t rbit32(uint32_t a) {
 
 static inline uint64_t pmul32(uint32_t a, uint32_t b) {
     uint64_t x = 0;
-    for (size_t i = 0; i < 4; i++) {
-        uint32_t a_ = a & (0x11111111 << i);
-        for (size_t j = 0; j < 4; j++) {
-            uint32_t b_ = b & (0x11111111 << (0x3 & (j-i)));
-            x ^= (0x1111111111111111 << j) & ((uint64_t)a_ * (uint64_t)b_);
-        }
+    for (size_t i = 0; i < 32; i++) {
+        x ^= (uint64_t)(a & (1 << i)) * (uint64_t)b;
     }
     return x;
 }
 
-uint32_t crc32c_barret_sparse_64wide(
+uint32_t crc32c_folding_naive_mul_2x32wide(
         uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;

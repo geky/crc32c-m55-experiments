@@ -1,8 +1,10 @@
-// A crc32c implementation using Barret reduction with pmul emulated
-// using sparse multiplications, a word at a time
+// A crc32c implementation using polynomial folding leveraging ARMv8-M's MVE
+// vmull.p16 instruction, 2 words at a time
 
 #include <stdint.h>
 #include <stddef.h>
+
+#include <arm_mve.h>
 
 
 static inline uint32_t rbit32(uint32_t a) {
@@ -16,22 +18,26 @@ static inline uint32_t rbit32(uint32_t a) {
 }
 
 static inline uint64_t pmul32(uint32_t a, uint32_t b) {
-    uint32_t a0 = a & 0x11111111;
-    uint32_t a1 = a & 0x22222222;
-    uint32_t a2 = a & 0x44444444;
-    uint32_t a3 = a & 0x88888888;
-    uint64_t x = 0;
-    for (size_t i = 0; i < 4; i++) {
-        x ^= (0x1111111111111111 << i) & (
-              (uint64_t)a0 * (uint64_t)(b & (0x11111111 << (0x3 & (0+i))))
-            ^ (uint64_t)a1 * (uint64_t)(b & (0x11111111 << (0x3 & (3+i))))
-            ^ (uint64_t)a2 * (uint64_t)(b & (0x11111111 << (0x3 & (2+i))))
-            ^ (uint64_t)a3 * (uint64_t)(b & (0x11111111 << (0x3 & (1+i)))));
-    }
-    return x;
+    uint16x8_t a_v = __arm_vdupq_n_u16(a);
+    uint16x8_t b_v = __arm_vdupq_n_u16(b);
+    a_v = __arm_vreinterpretq_u16_u32(
+            __arm_vsetq_lane_u32(a, __arm_vreinterpretq_u32_u16(a_v), 1));
+    a_v = __arm_vreinterpretq_u16_u32(
+            __arm_vsetq_lane_u32(a, __arm_vreinterpretq_u32_u16(a_v), 3));
+    b_v = __arm_vreinterpretq_u16_u32(
+            __arm_vsetq_lane_u32(b, __arm_vreinterpretq_u32_u16(b_v), 2));
+    b_v = __arm_vreinterpretq_u16_u32(
+            __arm_vsetq_lane_u32(b, __arm_vreinterpretq_u32_u16(b_v), 3));
+
+    uint32x4_t x_v = __arm_vmulltq_poly_p16(a_v, b_v);
+
+    return ((uint64_t)__arm_vgetq_lane_u32(x_v, 0))
+         ^ ((uint64_t)__arm_vgetq_lane_u32(x_v, 1) << 16)
+         ^ ((uint64_t)__arm_vgetq_lane_u32(x_v, 2) << 16)
+         ^ ((uint64_t)__arm_vgetq_lane_u32(x_v, 3) << 32);
 }
 
-uint32_t crc32c_barret_sparse_semirolled_64wide(
+uint32_t crc32c_folding_vmullp16_2x32wide(
         uint32_t crc, const void *data, size_t size) {
     const uint8_t *data_ = data;
     crc = crc ^ 0xffffffff;
