@@ -21,10 +21,8 @@ static inline uint32_t rbit32(uint32_t a) {
 static inline uint32_t pmul32(uint32_t a, uint32_t b) {
     uint16x8_t a_v = __arm_vdupq_n_u16(a);
     uint16x8_t b_v = __arm_vdupq_n_u16(b);
-    a_v = __arm_vreinterpretq_u16_u32(
-            __arm_vsetq_lane_u32(a, __arm_vreinterpretq_u32_u16(a_v), 1));
-    b_v = __arm_vreinterpretq_u16_u32(
-            __arm_vsetq_lane_u32(b, __arm_vreinterpretq_u32_u16(b_v), 2));
+    a_v = (uint16x8_t)__arm_vsetq_lane_u32(a, (uint32x4_t)a_v, 1);
+    b_v = (uint16x8_t)__arm_vsetq_lane_u32(b, (uint32x4_t)b_v, 2);
 
     uint32x4_t x_v = __arm_vmulltq_poly_p16(a_v, b_v);
 
@@ -41,8 +39,7 @@ uint32_t crc32c_folding_vmullp16_4x32wide(
     uint32x4_t k_v = __arm_vld1q_u32((const uint32_t[]){
         0xf20c0dfe, 0x3171d430, 0xf20c0dfe, 0x3171d430
     });
-    uint32x4_t k_swapped_v = __arm_vreinterpretq_u32_u16(
-            __arm_vrev32q_u16(__arm_vreinterpretq_u16_u32(k_v)));
+    uint32x4_t k_swapped_v = (uint32x4_t)__arm_vrev32q_u16((uint16x8_t)k_v);
 
     uint32x4_t folded_v = __arm_vsetq_lane_u32(crc, __arm_vdupq_n_u32(0), 0);
 
@@ -53,17 +50,13 @@ uint32_t crc32c_folding_vmullp16_4x32wide(
                     __arm_vld1q_u32((const uint32_t*)&data_[i]));
             // fold using emulated 32-bit pmul
             uint32x4_t lolo_v = __arm_vmullbq_poly_p16(
-                    __arm_vreinterpretq_u16_u32(folded_v),
-                    __arm_vreinterpretq_u16_u32(k_v));
+                    (uint16x8_t)folded_v, (uint16x8_t)k_v);
             uint32x4_t lohi_v = __arm_vmullbq_poly_p16(
-                    __arm_vreinterpretq_u16_u32(folded_v),
-                    __arm_vreinterpretq_u16_u32(k_swapped_v));
+                    (uint16x8_t)folded_v, (uint16x8_t)k_swapped_v);
             uint32x4_t hilo_v = __arm_vmulltq_poly_p16(
-                    __arm_vreinterpretq_u16_u32(folded_v),
-                    __arm_vreinterpretq_u16_u32(k_swapped_v));
+                    (uint16x8_t)folded_v, (uint16x8_t)k_swapped_v);
             uint32x4_t hihi_v = __arm_vmulltq_poly_p16(
-                    __arm_vreinterpretq_u16_u32(folded_v),
-                    __arm_vreinterpretq_u16_u32(k_v));
+                    (uint16x8_t)folded_v, (uint16x8_t)k_v);
             // xor everything together
             folded_v = __arm_veorq_u32(
                     lolo_v,

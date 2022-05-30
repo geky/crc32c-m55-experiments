@@ -20,10 +20,8 @@ static inline uint32_t rbit32(uint32_t a) {
 static inline uint32_t pmul32(uint32_t a, uint32_t b) {
     uint16x8_t a_v = __arm_vdupq_n_u16(a);
     uint16x8_t b_v = __arm_vdupq_n_u16(b);
-    a_v = __arm_vreinterpretq_u16_u32(
-            __arm_vsetq_lane_u32(a, __arm_vreinterpretq_u32_u16(a_v), 1));
-    b_v = __arm_vreinterpretq_u16_u32(
-            __arm_vsetq_lane_u32(b, __arm_vreinterpretq_u32_u16(b_v), 2));
+    a_v = (uint16x8_t)__arm_vsetq_lane_u32(a, (uint32x4_t)a_v, 1);
+    b_v = (uint16x8_t)__arm_vsetq_lane_u32(b, (uint32x4_t)b_v, 2);
 
     uint32x4_t x_v = __arm_vmulltq_poly_p16(a_v, b_v);
 
