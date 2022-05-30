@@ -22,10 +22,17 @@ CGI := $(SRC:%.c=$(BUILDDIR)%.ci) impls.py.ci
 CRCS ?= $(sort $(wildcard crc32c_*.c))
 TRACES ?= $(CRCS:%.c=%.trace)
 
+ifdef FAST
+override CFLAGS += -O3
+else
 override CFLAGS += -Os
+endif
 override CFLAGS += -g3
 override CFLAGS += -I.
 override CFLAGS += -std=c99 -Wall -pedantic
+ifdef DATA_SMALL
+override CFLAGS += -DDATA_SMALL
+endif
 
 
 # commands

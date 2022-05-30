@@ -13,13 +13,15 @@ struct impl {
 
 extern struct impl impls[];
 
+#if defined(DATA_SMALL)
+#define DATA_SIZE 512
+#define DATA_SEED 1
+#define DATA_CRC 0x9f2076a7
+#else
 #define DATA_SIZE 4096
 #define DATA_SEED 1
 #define DATA_CRC 0xd838a8bd
-
-//#define DATA_SIZE 512
-//#define DATA_SEED 1
-//#define DATA_CRC 0x9f2076a7
+#endif
 
 __attribute__((aligned(4096)))
 uint8_t data[DATA_SIZE];
