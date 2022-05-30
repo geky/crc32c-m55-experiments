@@ -17,6 +17,7 @@ GDB = arm-none-eabi-gdb
 SRC ?= $(sort $(wildcard *.c))
 OBJ := $(SRC:%.c=$(BUILDDIR)%.o) impls.py.o
 DEP := $(SRC:%.c=$(BUILDDIR)%.d) impls.py.d
+CGI := $(SRC:%.c=$(BUILDDIR)%.ci) impls.py.ci
 
 CRCS ?= $(sort $(wildcard crc32c_*.c))
 TRACES ?= $(CRCS:%.c=%.trace)
@@ -42,6 +43,10 @@ disas: $(OBJ)
 .PHONY: size
 size: $(OBJ)
 	$(SIZE) $^
+
+.PHONY: stack
+stack: $(OBJ)
+	./stack.py $(CGI)
 
 .PHONY: debug
 debug: $(TARGET)
@@ -80,7 +85,7 @@ impls.py.c: $(CRCS)
 	./impls.py $(^:.c=) > impls.py.c
 
 %.o: %.c
-	$(CC) -c -MMD $(CFLAGS) $< -o $@
+	$(CC) -c -MMD -fcallgraph-info=su $(CFLAGS) $< -o $@
 
 %.s: %.c
 	$(CC) -S $(CFLAGS) $< -o $@
@@ -94,4 +99,5 @@ clean:
 	rm -f impls.py.c
 	rm -f $(OBJ)
 	rm -f $(DEP)
+	rm -f $(CGI)
 	rm -f $(TRACES)
