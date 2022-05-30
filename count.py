@@ -3,14 +3,14 @@
 import re
 
 TYPES = {
-    'vmul': '(vmull.*)',
-    'vector': '(vmov.*|vdup.*|vshl.*|veor)',
+    'vmul': '(vmul.*)',
+    'vector': '(vmov.*|vdup.*|vshl.*|veor|vorr.*|vand.*)',
     'mul': '(mul.*|umull)',
     'ld/st': '(push|pop|ldr.*|str.*|ldmia.*|stmdb.*|vpush|vpop|vldr.*'
         '|vrev.*|vstr.*|vsli.*|vshr.*|vddup.*)',
-    'branch': '(bne.*|bcc.*|bhi.*|beq.*|bcs.*|le)',
+    'branch': '(bne.*|bcc.*|bhi.*|beq.*|bcs.*|le|cbz|cbnz)',
     'other': '(and.*|orr.*|eor.*|add.*|sub.*|mov.*|mvn.*|lsl.*|lsr.*'
-        '|uxtb|uxth|it|cmp|bic.*|rbit|b\.n|bl|bx|dls|tst|vmsr|vpst'
+        '|uxtb|uxth|it|cmp|bic.*|rbit|b\.n|b\.w|bl|bx|dls|tst|vmsr|vpst'
         '|rsb|ubfx)',
 }
 
